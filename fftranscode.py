@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import subprocess
 import os
@@ -177,10 +177,10 @@ class Fftranscode(Base):
         self.ffmpeg_ver = None
 
     def cancel_transcode(self, exit = True):
-        self.logger.warn('Cancelling transcode.')
+        self.logger.warning('Cancelling transcode.')
 
         if self.sp is not None:
-            self.logger.warn('Subprocess still executing, sending Kill signal.')
+            self.logger.warning('Subprocess still executing, sending Kill signal.')
             self.sp.kill()
             self.sp.wait()
         if exit:
@@ -259,7 +259,7 @@ class Fftranscode(Base):
         ffencode_pipe = subprocess.Popen(['ffmpeg', '-version'], stdout=subprocess.PIPE)
         buff = ffencode_pipe.communicate()
 
-        m = re.compile('''^ffmpeg version (.+) Copyright''').match(buff[0])
+        m = re.compile(b'^ffmpeg version (.+) Copyright').match(buff[0])
 
         if m:
             ver = m.groups()[0]
@@ -268,7 +268,7 @@ class Fftranscode(Base):
         self.ffmpeg_ver = ver
 
     def transcode(self):
-        if self.subprocess_out is not '-':
+        if self.subprocess_out != '-':
             outfile = open(self.subprocess_out, 'w')
             self.logger.info('Opened file "%s" for subprocess output.' % self.subprocess_out)
         else:
@@ -313,12 +313,12 @@ if __name__ == '__main__':
             print(fftranscode)
             exit_code = fftranscode.transcode()
         except Exception as e:
-            print e
+            print(e)
             fftranscode.logger.error('Exception: %s', type(e))
             fftranscode.cancel_transcode(exit = False)
             raise
     else:
-        print 'ERROR: input file must be set.'
+        print('ERROR: input file must be set.')
         sys.exit(1)
 
     sys.exit(exit_code)
