@@ -262,7 +262,9 @@ class Fftranscode(Base):
         m = re.compile(b'^ffmpeg version (.+) Copyright').match(buff[0])
 
         if m:
-            ver = m.groups()[0]
+            # This gets ingested as a bytes array and needs to be encoded to UTF-8
+            # to avoid it being printed as b'...'
+            ver = m.groups()[0].decode('UTF-8')
             self.logger.info("ffmpeg version: %s" % ver)
 
         self.ffmpeg_ver = ver
